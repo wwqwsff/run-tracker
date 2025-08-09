@@ -1,71 +1,9 @@
 <script setup>
 import { computed, ref } from "vue";
-import BaseButton from "./components/BaseButton.vue";
-import Title from "./components/Title.vue";
-import AddRunBlock from "./components/AddRunBlock.vue";
-import Dropwindow from "./components/Dropwindow.vue";
+import { AddRunWindow, BaseButton, Dropwindow, InputWithText, RunDataItem, Title } from "./components";
+import { monthName, monthNameNumber, dayHumber, dayName } from "./mock-api";
 
-const monthName = [
-  "Январь",
-  "Февраль",
-  "Март",
-  "Апрель",
-  "Май",
-  "Июнь",
-  "Июль",
-  "Август",
-  "Сентябрь",
-  "Октябрь",
-  "Ноябрь",
-  "Декабрь",
-];
-const monthNameNumber = [
-  "01",
-  "02",
-  "03",
-  "04",
-  "05",
-  "06",
-  "07",
-  "09",
-  "10",
-  "11",
-  "12",
-];
-const dayHumber = [
-  "01",
-  "02",
-  "03",
-  "04",
-  "05",
-  "06",
-  "07",
-  "08",
-  "09",
-  "10",
-  "11",
-  "12",
-  "13",
-  "14",
-  "15",
-  "16",
-  "17",
-  "18",
-  "19",
-  "20",
-  "21",
-  "22",
-  "23",
-  "24",
-  "25",
-  "26",
-  "27",
-  "28",
-  "29",
-  "30",
-  "31",
-];
-const dayName = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
+
 const nowmonth = computed(() => {
   const now = new Date();
   return {
@@ -76,6 +14,8 @@ const nowmonth = computed(() => {
     date: now,
   };
 });
+
+
 const deleteRun = (id) => {
   runs.value = runs.value.filter((run) => run.id !== id);
 };
@@ -108,29 +48,7 @@ const newRun = ref({
   type: "",
   notes: "",
 });
-const addNewRun = () => {
-  if (!newRun.value.distance || !newRun.value.pace || !newRun.value.time) {
-    alert("Пожалуйста, заполните обязательные поля: км, темп и время");
-    return;
-  }
-  const run = {
-    id: Date.now(),
-    date: new Date(),
-    distance: newRun.value.distance,
-    pace: newRun.value.pace,
-    time: newRun.value.time,
-    type: newRun.value.type || "Не добавлен тип",
-    notes: newRun.value.notes || "Не добавлены заметки",
-  };
-  runs.value.unshift(run);
-  newRun.value = {
-    distance: "",
-    pace: "",
-    time: "",
-    type: "",
-    notes: "",
-  };
-};
+
 const tempMonth = computed(() => {
   if (runs.value.length == 0) return "0:00";
   const totalPace = runs.value.reduce((sum, run) => {
@@ -142,89 +60,50 @@ const tempMonth = computed(() => {
   const sec = Math.round((avg - min) * 60);
   return `${min}:${sec.toString().padStart(2, "0")}`;
 });
+
 const kmMonth = computed(() => {
   return runs.value
     .reduce((sum, run) => sum + parseFloat(run.distance || 0), 0)
     .toFixed(1);
 });
+
 const trainingMonth = computed(() => {
   return runs.value.length;
 });
-const kmrunning = computed(() => {
-  return 5.1;
+
+const infoItems = computed(() => {
+  return [
+    { quality: "км", value: kmMonth.value },
+    { quality: "темп", value: tempMonth.value },
+    { quality: "тренировок", value: trainingMonth.value },
+  ];
 });
+
+const addNewRun = (run) => {
+  runs.value.unshift(run);
+};
 </script>
 
 <template>
   <header class="header">
-    <div class="title">
-      <Title text1="Беговой трекер" size="big"></Title>
-    </div>
+    <Title text="Беговой трекер" size="big"  class="title"/>
+   
 
     <div class="content-wrapper">
-      <div class="month">
-        <h2 class="montName">{{ nowmonth.month }}</h2>
-        <div class="info">
-          <ul>
-            <li>км: {{ kmMonth }}</li>
-            <li>темп: {{ tempMonth }} мин/км</li>
-            <li>тренировок: {{ trainingMonth }}</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="add-run">
-        <BaseButton
-          class="add-run-btn"
-          form="rectangle"
-          text="Добавить пробежку"
-          color="yello"
-          @click="addNewRun"
-        >
-        </BaseButton>
-
-        <div class="add-base-information">
-          <div class="add-run-input">
-            <AddRunBlock text2="км:" placeholder="5" v-model="newRun.distance">
-            </AddRunBlock>
-
-            <AddRunBlock
-              class="add-run-in1"
-              text2="темп:"
-              placeholder="5:30"
-              v-model="newRun.pace"
-            >
-            </AddRunBlock>
-            <AddRunBlock
-              class="add-run-in1"
-              text2="время:"
-              placeholder="29"
-              v-model="newRun.time"
-            >
-            </AddRunBlock>
+      
+     
+          <div class="info-items">
+            <h2 class="montName">{{ nowmonth.month }}</h2>
+            <RunDataItem v-for="item in infoItems" :key="item.quality" :quality="item.quality" :value="item.value" />
           </div>
-          <div class="add-run-input-2">
-            <Dropwindow
-              variation="тип:"
-              look="Выберите тип занятия"
-              text1="Интервалы"
-              text2="Длительная"
-              text3="Темповая"
-              text4="Восстановительная"
-              v-model="newRun.type"
-            ></Dropwindow>
 
-            <AddRunBlock
-              text2="заметки:"
-              placeholder="введите заметку"
-              v-model="newRun.notes"
-            >
-            </AddRunBlock>
-          </div>
-        </div>
-      </div>
+          <AddRunWindow @addNewRun="addNewRun" />
+    
     </div>
   </header>
+  
+<!-- вынести в отдельный компонент -->
+
   <main class="main-content">
     <div class="history-run">
       <Title
@@ -232,6 +111,7 @@ const kmrunning = computed(() => {
         size="base-text"
         class="history-title"
       ></Title>
+
       <div class="history-stast">
         <Dropwindow
           variation="Сортировать по типу:"
@@ -244,6 +124,7 @@ const kmrunning = computed(() => {
           sizebig="big"
         ></Dropwindow>
 
+        
         <Dropwindow
           variation="Cортировать по месяцу:"
           look="Все месяцы"
@@ -312,6 +193,13 @@ body {
 }
 </style>
 <style scoped>
+
+.info-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .header {
   position: absolute;
   top: 0;
@@ -332,17 +220,16 @@ body {
 }
 .content-wrapper {
   display: flex;
-  justify-content: space-between;
-  width: 100%;
+  flex-direction: row;
+  justify-content: center;
+  gap: 100px;
+  align-items: left;
 
   height: auto;
 }
 
 .title {
-  color: #000000;
   margin: 0;
-  font-family: "Times New Roman", Times, serif;
-  font-size: 40px;
   text-align: center;
   width: 100%;
   font-weight: bold;
@@ -357,21 +244,7 @@ body {
   font-family: "Times New Roman", Times, serif;
 }
 
-.add-run {
-  position: absolute;
-  top: 80%;
-  left: 25%;
-  width: 625px;
-  height: 260px;
-  background: linear-gradient(
-    180deg,
-    rgba(212, 161, 122, 0.8) 0%,
-    rgba(196, 78, 24, 0.8) 100%
-  );
-  font-family: "Times New Roman", Times, serif;
-  border-radius: 6px;
-  padding: 15px;
-}
+
 .history-run {
   width: 1041px;
   min-height: 350px;
@@ -470,23 +343,7 @@ body {
   padding: 20px 0 0;
   margin-top: 25px;
 }
-.add-run-border {
-  width: 625px;
-  height: 330px;
-  border: 2px solid black;
-  margin: 0 auto;
-  padding: 17px 0 0 28px;
-  text-align: left;
-}
 
-.add-run-input {
-  margin-top: 3px;
-  margin-right: 20px;
-  padding: 0px 20px 0 0;
-}
-.add-run-in1 {
-  margin-top: 27px;
-}
 
 .montName {
   font-size: 24px;
@@ -495,19 +352,11 @@ body {
   font-family: "Times New Roman", Times, serif;
   color: #000000;
 }
-.add-run-btn {
-  margin: 0 0 0px 0;
-}
+
 .info {
   width: 100%;
 }
 
-.add-run-input-2 {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  margin-bottom: 27px;
-}
 
 ul {
   width: 420px;

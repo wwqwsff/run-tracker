@@ -38,6 +38,8 @@ const emit = defineEmits(["update:modelValue"]);
 const handleChange = (e) => {
   emit("update:modelValue", e.target.value);
 };
+
+//СДЕЛАТЬ ЧЕРЕЗ ЦИКЛ!!!
 </script>
 <template>
   <div class="add-run-sel">
@@ -48,6 +50,8 @@ const handleChange = (e) => {
       :value="modelValue"
       @change="handleChange"
     >
+
+  
       <option value="">{{ look }}</option>
       <option :value="text1">{{ text1 }}</option>
       <option :value="text2">{{ text2 }}</option>
@@ -95,7 +99,7 @@ const handleChange = (e) => {
   box-sizing: border-box;
   background-color: #f0e68c;
   border-radius: 6px;
-  margin-left: 30px; /* Добавляем отступ слева */
+  margin-left: 30px; 
   border: 1px solid black;
 }
 .bigtext {
