@@ -8,7 +8,7 @@ const props = defineProps({
     type: String,
     default: 'small'
   },
-  text1: {
+  text: {
     type: String,
     default: 'Текст'
   }
@@ -18,20 +18,25 @@ const props = defineProps({
 <template>
   <div>
     <p class="base-text" :class="[color, size]">
-      {{ text1 }}
+      {{ text }}
     </p>
   </div>
 </template>
 
 <style scoped>
 .base-text {
-  font-size: 24px;
+  font-family: "Times New Roman", Times, serif;
+  line-height: 28px;
   color: black;
+}
+
+.small {
+  font-size: 24px;
 }
 .big {
-  font-size: 36px;
-  color: black;
+  font-size: 40px;
 }
+
 .grey {
   color: #696969;
 }
