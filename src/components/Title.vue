@@ -25,7 +25,7 @@ const props = defineProps({
 
 <style scoped>
 .base-text {
-  font-family: "Times New Roman", Times, serif;
+  font-family: 'Times New Roman', Times, serif;
   line-height: 28px;
   color: black;
 }
@@ -39,5 +39,10 @@ const props = defineProps({
 
 .grey {
   color: #696969;
+}
+.error-message {
+  color: black;
+  font-size: 15px;
+  font-family: 'Times New Roman', Times, serif;
 }
 </style>

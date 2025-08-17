@@ -8,6 +8,11 @@ const props = defineProps({
     type: String,
     default: 'Введите данные'
   },
+  hasError: {
+    type: Boolean,
+    default: false
+  },
+
   writebig: {
     type: String,
     default: 'label'
@@ -40,7 +45,7 @@ const handleInput = e => {
       <input
         type="text"
         class="input-style"
-        :class="[bigcont]"
+        :class="[bigcont, { 'error-input': hasError }]"
         :value="modelValue"
         @input="handleInput"
         :placeholder="placeholder"
@@ -91,5 +96,15 @@ const handleInput = e => {
   border-radius: 6px;
   margin-left: 30px; /* Добавляем отступ слева */
   border: 1px solid black;
+}
+.error-input {
+  border: 1px solid red !important;
+  box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+}
+
+/* Усиленная подсветка для ошибки */
+.error-style {
+  border: 2px solid red !important;
+  background-color: #ffe6e6 !important;
 }
 </style>

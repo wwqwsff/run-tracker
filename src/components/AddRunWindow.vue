@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { BaseButton, Dropwindow, InputWithText } from './index'
+import { BaseButton, Dropwindow, InputWithText, Title } from './index'
 import { runTypes } from '@/mock-api'
 
 const newRun = ref({
@@ -10,12 +10,39 @@ const newRun = ref({
   type: '',
   notes: ''
 })
-
+const errorMessege = ref('')
+const errors = ref({
+  distance: false,
+  pace: false,
+  time: false
+})
 const emit = defineEmits(['addNewRun'])
 
 const addNewRun = () => {
+  errorMessege.value = ''
+  errors.value = {
+    distance: false,
+    pace: false,
+    time: false
+  }
+  if (!newRun.value.distance) {
+    errors.value.distance = true
+  }
+
+  if (!newRun.value.pace) {
+    errors.value.pace = true
+  }
+
+  if (!newRun.value.time) {
+    errors.value.time = true
+  }
+
   if (!newRun.value.distance || !newRun.value.pace || !newRun.value.time) {
-    alert('Пожалуйста, заполните обязательные поля: км, темп и время')
+    errorMessege.value = 'Пожалуйста, заполните обязательные поля'
+    return
+  }
+  if (!/^\d{1,2}:\d{2}$/.test(newRun.value.pace)) {
+    errorMessege.value = 'Укажите темп в формате ММ:СС (например 5:30)'
     return
   }
 
@@ -53,11 +80,28 @@ const addNewRun = () => {
 
     <div class="add-base-information">
       <div class="add-run-input">
-        <InputWithText text2="км:" placeholder="0" v-model="newRun.distance"> </InputWithText>
-
-        <InputWithText class="add-run-in1" text2="темп:" placeholder="0:00" v-model="newRun.pace">
+        <InputWithText
+          text2="км:"
+          placeholder="0"
+          v-model="newRun.distance"
+          :hasError="errors.distance"
+        >
         </InputWithText>
-        <InputWithText class="add-run-in1" text2="время:" placeholder="00" v-model="newRun.time">
+
+        <InputWithText
+          text2="темп:"
+          placeholder="0:00"
+          v-model="newRun.pace"
+          :hasError="errors.pace"
+        >
+        </InputWithText>
+        <InputWithText
+          class="add-run-in1"
+          text2="время:"
+          placeholder="00"
+          v-model="newRun.time"
+          :hasError="errors.time"
+        >
         </InputWithText>
       </div>
       <div class="add-run-input-2">
@@ -72,6 +116,12 @@ const addNewRun = () => {
         </InputWithText>
       </div>
     </div>
+    <Title
+      v-if="errorMessege"
+      :text="errorMessege"
+      color="error-message"
+      class="error-class"
+    ></Title>
   </div>
 </template>
 
@@ -119,6 +169,9 @@ const addNewRun = () => {
   font-family: 'Times New Roman', Times, serif;
   border-radius: 6px;
   padding: 15px;
+}
+.error-class {
+  margin-top: -30px;
 }
 .history-run {
   width: 1041px;
