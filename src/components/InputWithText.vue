@@ -12,6 +12,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  isText: {
+    type: Boolean,
+    default: false
+  },
 
   writebig: {
     type: String,
@@ -27,11 +31,15 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 
 const handleInput = e => {
-  if (props.text2 === 'темп:') {
-    const value = e.target.value.replace(/[^\d:]/g, '')
+  let value = e.target.value
+
+  if (props.isText) {
+    emit('update:modelValue', value)
+  } else if (props.text2 === 'темп:') {
+    value = value.replace(/[^\d:]/g, '')
     emit('update:modelValue', value)
   } else {
-    const value = e.target.value.replace(/[^\d.]/g, '')
+    value = value.replace(/[^\d.]/g, '')
     emit('update:modelValue', value)
   }
 }

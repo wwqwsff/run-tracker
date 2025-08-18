@@ -112,7 +112,12 @@ const addNewRun = () => {
           v-model="newRun.type"
         ></Dropwindow>
 
-        <InputWithText text2="заметки:" placeholder="введите заметку" v-model="newRun.notes">
+        <InputWithText
+          text2="заметки:"
+          placeholder="введите заметку"
+          v-model="newRun.notes"
+          :isText="true"
+        >
         </InputWithText>
       </div>
     </div>

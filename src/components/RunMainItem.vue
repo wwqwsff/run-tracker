@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { BaseButton, Dropwindow, InputWithText, Title } from './index'
-import { runTypes, monthName } from '@/mock-api'
+import { runTypes, monthName, dayName } from '@/mock-api'
 
 const props = defineProps({
   runs: {
@@ -9,10 +9,7 @@ const props = defineProps({
     required: true,
     default: () => []
   },
-  nowmonth: {
-    type: Object,
-    required: true
-  },
+
   initialSortOptions: {
     type: Object,
     default: () => ({ type: '', month: '' })
@@ -27,15 +24,25 @@ const sortedRuns = computed(() => {
   }
 
   if (sortOptions.value.month) {
+    const selectedMonth = monthName.indexOf(sortOptions.value.month) + 1
     result = result.filter(run => {
       const runDate = new Date(run.date)
-      return runDate.getMonth() + 1 === parseInt(sortOptions.value.month)
+      return runDate.getMonth() + 1 === selectedMonth
     })
   }
 
   return result
 })
 const emit = defineEmits(['update:sort-options', 'delete-run'])
+const formatDate = dateString => {
+  const date = new Date(dateString)
+  const day = date.getDate().toString().padStart(2, '0')
+  const month = (date.getMonth() + 1).toString().padStart(2, '0')
+  const dayOfWeek = dayName[date.getDay()]
+
+  return `${day}.${month} ${dayOfWeek}`
+}
+
 const getRunDetails = run => [
   { value: run.time, text: null },
   { value: run.pace, text: ' мин/км' },
@@ -68,8 +75,7 @@ const getRunDetails = run => [
     <div class="history-container" v-for="run in sortedRuns" :key="run.id">
       <div class="h-container-up">
         <div class="h-container-up-date">
-          {{ nowmonth.dayNumber }}.{{ nowmonth.monthNumber }}
-          {{ nowmonth.dayName }}
+          {{ formatDate(run.date) }}
         </div>
         <div class="h-container-up-notes">{{ run.notes }}</div>
       </div>

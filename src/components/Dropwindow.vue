@@ -2,6 +2,7 @@
 const props = defineProps({
   modelValue: {
     type: String,
+
     default: ''
   },
   variation: {
@@ -34,8 +35,6 @@ const emit = defineEmits(['update:modelValue'])
 const handleChange = e => {
   emit('update:modelValue', e.target.value)
 }
-
-//СДЕЛАТЬ ЧЕРЕЗ ЦИКЛ!!!
 </script>
 <template>
   <div class="add-run-sel">

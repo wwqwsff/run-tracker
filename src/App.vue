@@ -88,7 +88,6 @@ const addNewRun = run => {
       <AddRunWindow @addNewRun="addNewRun" />
     </div>
   </header>
-
   <main class="main-content">
     <RunMainItem
       :runs="runs"
