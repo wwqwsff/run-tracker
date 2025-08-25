@@ -99,7 +99,8 @@ const addNewRun = run => {
   </main>
 </template>
 
-<style>
+<style lang="scss">
+@use '@/assets/variables.scss' as *;
 html,
 body {
   margin: 0;
@@ -109,15 +110,18 @@ body {
 }
 
 body {
-  background: linear-gradient(180deg, rgba(212, 161, 122, 0.8) 0%, rgba(196, 78, 24, 0.8) 100%);
+  background: $primary-gradient;
   background-attachment: fixed;
   position: relative;
 }
 </style>
-<style scoped>
+
+<style lang="scss" scoped>
+@use '@/assets/variables.scss' as *;
+@use '@/assets/mixin.scss' as *;
+
 .info-items {
-  display: flex;
-  flex-direction: column;
+  @include flex-column();
   gap: 10px;
 }
 
@@ -140,12 +144,8 @@ body {
   box-sizing: border-box;
 }
 .content-wrapper {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
+  @include flex(row, center, left);
   gap: 100px;
-  align-items: left;
-
   height: auto;
 }
 
@@ -157,32 +157,30 @@ body {
 }
 
 .month {
-  display: flex;
-  flex-direction: column;
+  @include flex-column();
   align-items: flex-start;
   margin: 0;
   position: relative;
-  font-family: 'Times New Roman', Times, serif;
+  font-family: $font-family-primary;
 }
 
 .history-run {
   width: 1041px;
   min-height: 350px;
-  background-color: #f0e68c;
+  background-color: $background-color;
   margin: 0 auto;
   position: relative;
-  border-radius: 6px;
-  font-family: 'Times New Roman', Times, serif;
+  border-radius: $border-radius;
+  font-family: $font-family-primary;
 }
 
 .btn-history {
-  background: linear-gradient(180deg, rgba(212, 161, 122, 0.8) 0%, rgba(196, 78, 24, 0.8) 100%);
+  background: $primary-gradient;
   margin-left: 70px;
 }
 
 .add-base-information {
-  display: flex;
-  flex-direction: row;
+  @include flex-row();
   gap: 5px;
   padding: 20px 0 0;
   margin-top: 25px;
@@ -192,7 +190,7 @@ body {
   font-size: 24px;
   text-align: center;
   margin: 0 0 20px 0;
-  font-family: 'Times New Roman', Times, serif;
+  font-family: $font-family-primary;
   color: #000000;
 }
 
@@ -209,41 +207,16 @@ ul {
   font-size: 24px;
   color: black;
   text-align: left;
-  font-family: 'Times New Roman', Times, serif;
+  font-family: $font-family-primary;
 }
 
-@media (max-width: 768px) {
-  .title {
-    font-size: 32px;
-  }
-
-  .montName,
-  ul {
-    font-size: 20px;
-  }
-}
-
-@media (max-width: 480px) {
-  .title {
-    font-size: 28px;
-  }
-
-  .montName,
-  ul {
-    font-size: 18px;
-  }
-
-  header {
-    padding: 1px 15px;
-  }
-}
 li {
   margin-bottom: 20px;
   width: 185px;
   height: 65px;
-  background: linear-gradient(180deg, rgba(212, 161, 122, 0.8) 0%, rgba(196, 78, 24, 0.8) 100%);
+  background: $primary-gradient;
   display: flex;
   align-items: center;
-  border-radius: 6px;
+  border-radius: $border-radius;
 }
 </style>
